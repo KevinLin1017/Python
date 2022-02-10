@@ -66,16 +66,44 @@ for n in x:
 
 print("8. {}".format(mylist))
 
+x = int(input("Please enter a number :"))
+
 
 def fact(x):
     if x == 0:
-        return
+        return 1
     return x * fact(x - 1)
 
 
-x = int(input())
-print(fact(x))
+print("9. {}".format(fact(x)))
 
+x = int(input("Please enter a number :"))
+d = {}
+for i in range(1, x + 1):
+    d[i] = i * i
+
+print("10. {}".format(d))
+
+x = input("Please enter a sequence of number :")
+L = x.split(",")
+t = tuple(L)
+print("11. \n{0}\n{1}".format(L, t))
+
+
+class inputOutString(object):
+    def __init__(self):
+        self.s = ""
+
+    def getString(self):
+        self.s = input("Input a string : ")
+
+    def printString(self):
+        print("12.   {}".format(self.s.upper()))
+
+
+strObj = inputOutString()
+strObj.getString()
+strObj.printString()
 
 # --------------------------------------------------------------------------------
 print("\n \n  Coding Exercise 6: \n")
