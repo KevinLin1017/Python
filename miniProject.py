@@ -1,21 +1,17 @@
-import numpy as np
 import pandas as pd
-import datetime
+import logging
 
-# Read user input on what file name they wish to read
-# Attempt to read the file
-#   if failed as the user to try again
-#   if succeeds ask the user for a month and year they wish to see
-#   Grab desire data
-#   Display data on the screen
-#   Bonus: Display steps on console
-# 1.
-# userInput = input("Please enter the month and the year of the file you want to open : ")
+# Configuration for logging
+logging.basicConfig(
+    filename="debug.log",
+    level=logging.DEBUG,
+    format="[%(asctime)s] %(lineno)d [%(levelname)s   :] - %(message)s",
+    filemode="w",
+    datefmt="%H:%M:%S",
+)
 
-f = open("Log.txt", "w")
-fileName = "expedia_report_monthly_march_2018.xlsx"
-month = fileName.split("_")[3]
-year = (fileName.split("_")[4])[0:4]
+
+# Variable used to convert datetime month to words
 month_labels = {
     1: "january",
     2: "feburary",
@@ -32,45 +28,79 @@ month_labels = {
 }
 
 try:
-    validInput = True
-    f.write(
-        "{0} [INFO  ] : Attempting to open file {1}".format(
-            datetime.datetime.now(), fileName
-        )
-    )
+    # File input names
+    # fileName = "expedia_report_monthly_march_2018.xlsx"
+    # fileName = input("Please input the name of the file :")
+    fileName = "expedia_report_monthly_january_2018.xlsx"
+
+    # Extract the month from the file name
+    month = fileName.split("_")[3]
+
+    # Extract the year from the file name
+    year = int((fileName.split("_")[4])[0:4])
+
+    # Open the excel file based on the file name given prior
+    # FileName: the file path and name of file
+    # SheetName: Which tab of excel sheet
+    # engine: Decoding method
+    logging.info("Attempting to open file {}".format(fileName))
+
     df = pd.read_excel(
         fileName,
         sheet_name="Summary Rolling MoM",
         engine="openpyxl",
     )
-except BaseException as err:
-    print("Error: The following file {} does not exist".format(err))
-    print("The program will now exit.")
 
-df.columns = [
-    "Date",
-    "Calls Offered",
-    "Abandon after 30s",
-    "FCR",
-    "DSAT",
-    "CSAT",
-]
+    logging.info("File has sucessifully been open")
 
-df = df.dropna()
-df = df.drop(index=12)
+    # Associated the columns in the excel sheet to the dataframe
+    df.columns = [
+        "Date",
+        "Calls Offered",
+        "Abandon after 30s",
+        "FCR",
+        "DSAT",
+        "CSAT",
+    ]
 
-df["Date"] = pd.to_datetime(df["Date"])
-df["Year"] = df["Date"].dt.year
-df["Month"] = (df["Date"].dt.month).apply(lambda x: month_labels[x])
-df["Calls Offered"] = df["Calls Offered"].astype(int)
-df["Abandon after 30s"] = df["Abandon after 30s"].apply("{:.2%}".format)
-df["FCR"] = df["FCR"].apply("{:.2%}".format)
-df["DSAT"] = df["DSAT"].apply("{:.2%}".format)
-df["CSAT"] = df["CSAT"].apply("{:.2%}".format)
+    logging.debug(" Formating Table ...")
 
-print(df)
-print(
-    df.loc[
+    # The following code formats the table to remove all unused information --------------
+    # Drop all the columns/row that contains no values
+    df = df.dropna()
+
+    # Remove the row called average
+    df = df[df["Date"] != "Average"]
+
+    # Adjust date to a datetime rather than object
+    df["Date"] = pd.to_datetime(df["Date"])
+
+    # Obtain the year from Date
+    df["Year"] = df["Date"].dt.year
+
+    # Obtain the month from Date
+    df["Month"] = (df["Date"].dt.month).apply(lambda x: month_labels[x])
+
+    # Adjust Calls Offered to an interger type
+    df["Calls Offered"] = df["Calls Offered"].astype(int)
+
+    # Adjust Abandon after 30s to a percentage
+    df["Abandon after 30s"] = df["Abandon after 30s"].apply("{:.2%}".format)
+
+    # Adjust FCR to a percentage
+    df["FCR"] = df["FCR"].apply("{:.2%}".format)
+
+    # Adjust DSAT to a percentage
+    df["DSAT"] = df["DSAT"].apply("{:.2%}".format)
+
+    # Adjust CSAT to a percentage
+    df["CSAT"] = df["CSAT"].apply("{:.2%}".format)
+    logging.debug(" Table formmated complete ")
+
+    # ---------------------------------------------------------------------------------------
+
+    # Look for the data the user wants and which column is returned
+    result = df.loc[
         (df.Month == month) & (df.Year == year),
         [
             "Month",
@@ -82,4 +112,12 @@ print(
             "CSAT",
         ],
     ]
-)
+
+    # Log the user's data
+    logging.debug(" The request has been processed \n {}".format(result))
+    print(result)
+
+except BaseException as err:
+    logging.debug("Error: The following file {} does not exist".format(err))
+    print("The program will now exit.")
+    quit()
