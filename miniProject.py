@@ -10,7 +10,6 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 
-
 # Variable used to convert datetime month to words
 month_labels = {
     1: "january",
@@ -27,11 +26,12 @@ month_labels = {
     12: "december",
 }
 
+fileName = "expedia_report_monthly_january_2018.xlsx"
+# fileName = "expedia_report_monthly_march_2018.xlsx"
+
 try:
     # File input names
-    # fileName = "expedia_report_monthly_march_2018.xlsx"
     # fileName = input("Please input the name of the file :")
-    fileName = "expedia_report_monthly_january_2018.xlsx"
 
     # Extract the month from the file name
     month = fileName.split("_")[3]
