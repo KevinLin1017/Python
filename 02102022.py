@@ -1,6 +1,4 @@
-from unittest import result
-
-from pandas import period_range
+from functools import reduce
 
 
 print("Coding Exercise 8 :")
@@ -214,15 +212,23 @@ print(capitalize("hello world!"))
 # The product should be increased by 10,- € if the value of the order is smaller than 100,00 €.
 # Write a Python program using lambda and map.
 
-OrderNumber2Price = {34587: 40.95, 98762: 56.80, 77226: 32.95, 88112: 24.99}
+orders = [
+    ["34587", "Learning Python, Mark Lutz", 4, 40.95],
+    ["98762", "Programming Python, Mark Lutz", 5, 56.80],
+    ["77226", "Head First Python, Paul Barry", 3, 32.95],
+    ["88112", "Einführung in Python3, Bernd Klein", 3, 24.99],
+]
 
+min = 100000
 
-def OrderNumberPrice(x):
-    result = x.apply(lambda x: OrderNumber2Price[x])
-    return result
+result = list(
+    map(
+        lambda x: x if x[1] >= min else (x[0], x[1] + 10),
+        map(lambda x: (x[0], x[2] * x[3]), orders),
+    )
+)
 
-
-print(OrderNumberPrice(34587))
+print(result)
 
 
 # The same bookshop, but this time we work on a different list.
@@ -231,3 +237,27 @@ print(OrderNumberPrice(34587))
 # (article number, quantity, price per unit) ]
 # Write a program which returns a list of two tuples with
 # (order number, total amount of order).
+
+
+orders = [
+    [1, ("5464", 4, 9.99), ("8274", 18, 12.99), ("9744", 9, 44.95)],
+    [2, ("5464", 9, 9.99), ("9744", 9, 44.95)],
+    [3, ("5464", 9, 9.99), ("88112", 11, 24.99)],
+    [4, ("8732", 7, 11.99), ("7733", 11, 18.99), ("88112", 5, 39.95)],
+]
+
+result = list(
+    map(
+        lambda k: k if k[1] >= 100 else (k[0], k[1] + 10),
+        map(
+            lambda x: (
+                x[0],
+                reduce(lambda a, b: a + b, list(map(lambda y: y[1] * y[2], x[1:]))),
+            ),
+            orders,
+        ),
+    )
+)
+
+
+print(result)
