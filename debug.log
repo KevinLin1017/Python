@@ -1,7 +1,17 @@
-[02:20:41] 44 [INFO   :] - Attempting to open file expedia_report_monthly_january_2018.xlsx
-[02:20:42] 52 [INFO   :] - File has sucessifully been open
-[02:20:42] 64 [DEBUG   :] -  Formating Table ...
-[02:20:42] 96 [DEBUG   :] -  Table formmated complete 
-[02:20:42] 115 [DEBUG   :] -  The request has been processed 
+[02:39:26] 50 [INFO   :] - Attempting to open file expedia_report_monthly_january_2018.xlsx
+[02:39:29] 54 [INFO   :] - File has sucessifully been open
+[02:39:29] 63 [DEBUG   :] -  Formating Table ...
+[02:39:29] 95 [DEBUG   :] -  Table formmated complete 
+[02:39:30] 113 [DEBUG   :] -  The request has been processed 
        Month  Year  Calls Offered Abandon after 30s     FCR    DSAT    CSAT
 10  january  2018          16915             2.32%  86.50%  14.20%  78.30%
+[02:39:30] 114 [INFO   :] -  
+
+
+
+january 2018 
+Calls Offered: 16915 
+Abandon after 30s: 2.32% 
+FCR: 86.50% 
+DSAT: 14.20%
+CSAT: 78.30%
