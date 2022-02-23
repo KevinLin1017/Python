@@ -28,7 +28,7 @@ month_labels = {
 }
 
 fileName = "expedia_report_monthly_january_2018.xlsx"
-sheetName = "Summary Rolling MoM"
+sheetName = "VOC Rolling MoM"
 decoder = "openpyxl"
 # fileName = "expedia_report_monthly_march_2018.xlsx"
 
@@ -50,6 +50,7 @@ try:
     logging.info("Attempting to open file {}".format(fileName))
 
     df = pd.read_excel(fileName, sheet_name=sheetName, engine=decoder)
+    print(df.iloc[0])
 
     logging.info("File has sucessifully been open")
 
@@ -101,21 +102,24 @@ try:
         (df.Month == month) & (df.Year == year),
         ["Month", "Year", "Calls Offered", "Abandon after 30s", "FCR", "DSAT", "CSAT"],
     ]
-    
-    # Format the result so they are not in panda series 
+
+    # Format the result so they are not in panda series
     callsOffered = int(result["Calls Offered"].values)
     abandon = str((result["Abandon after 30s"].values)[0])
-    fcr =  str((result["FCR"].values)[0])
+    fcr = str((result["FCR"].values)[0])
     dsat = str((result["DSAT"].values)[0])
     csat = str((result["CSAT"].values)[0])
-    
+
     # Log the user's data
     logging.debug(" The request has been processed \n {}".format(result))
-    logging.info(" \n\n\n\n{} {} \nCalls Offered: {} \nAbandon after 30s: {} \nFCR: {} \nDSAT: {}\nCSAT: {}".format(month,year,callsOffered,abandon,fcr,dsat,csat))
+    logging.info(
+        " \n\n\n\n{} {} \nCalls Offered: {} \nAbandon after 30s: {} \nFCR: {} \nDSAT: {}\nCSAT: {}".format(
+            month, year, callsOffered, abandon, fcr, dsat, csat
+        )
+    )
     print(result)
 
 except BaseException as err:
     logging.debug("Error: The following file {} does not exist".format(err))
     print("The program will now exit.")
     quit()
-
